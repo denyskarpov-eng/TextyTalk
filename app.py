@@ -11,7 +11,7 @@ def get_api_key():
         return st.session_state['api_key']
     
     # Prompt the user to enter the API key
-    api_key = st.text_input('Enter your API key', type='password', disabled=not (uploaded_file and query_text))
+    api_key = st.text_input('Enter your API key', type='password')
     
     # Store the API key in the session state
     st.session_state['api_key'] = api_key
