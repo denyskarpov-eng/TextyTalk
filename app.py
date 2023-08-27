@@ -7,9 +7,9 @@ from langchain.chains import RetrievalQA
 
 
 
- if 'OPENAI_API_KEY' in st.session_state:
+if 'OPENAI_API_KEY' in st.session_state:
     api_key = st.session_state['OPENAI_API_KEY']
- else:
+else:
     api_key = st.text_input('Enter your API key', type='password')
     st.session_state['OPENAI_API_KEY'] = api_key
 
