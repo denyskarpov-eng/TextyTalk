@@ -13,9 +13,8 @@ st.set_page_config(page_title='🦜🔗 TextyTalk')
 if 'OPENAI_API_KEY' not in st.session_state:
     api_key = st.text_input('Enter your API key', type='password')
     st.session_state['OPENAI_API_KEY'] = api_key
-    print(api_key)
-    print(st.write(st.session_state['OPENAI_API_KEY']))
-    print(st.write(st.session_state['OPENAI_API_KEY']))
+    key = st.session_state.get('OPENAI_API_KEY')
+    print(key)
 
 
 
