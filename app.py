@@ -41,6 +41,7 @@ st.set_page_config(page_title='🦜🔗 TextyTalk')
 st.title('🦜🔗 TextyTalk')
 
 openai = get_api_key()
+print(openai)
 # File upload
 uploaded_file = st.file_uploader('Upload a document', type='txt')
 # Query text
