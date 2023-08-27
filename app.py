@@ -5,6 +5,9 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma, LanceDB
 from langchain.chains import RetrievalQA
 
+# Page title
+st.set_page_config(page_title='🦜🔗 TextyTalk')
+
 
 
 if 'OPENAI_API_KEY' in st.session_state:
@@ -32,9 +35,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
         qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key, chain_type='stuff', retriever=retriever))
         return qa.run(query_text)
 
-# Page title
-st.set_page_config(page_title='🦜🔗 TextyTalk')
-st.title('🦜🔗 TextyTalk')
+
 
 
 # File upload
