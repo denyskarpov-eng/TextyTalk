@@ -13,11 +13,12 @@ st.set_page_config(page_title='🦜🔗 TextyTalk')
 if 'OPENAI_API_KEY' not in st.session_state:
     api_key = st.text_input('Enter your API key', type='password')
     st.session_state['OPENAI_API_KEY'] = api_key
-    key = st.session_state.get('OPENAI_API_KEY')
-    if key:
-        print("YO")
-    else:
-        print("NO")
+
+key = st.session_state.get('OPENAI_API_KEY')
+if key:
+    print("YO")
+else:
+    print("NO")
 
 
 def generate_response(uploaded_file, openai_api_key, query_text):
