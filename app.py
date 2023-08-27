@@ -21,6 +21,7 @@ def get_api_key():
 
 def generate_response(uploaded_file, openai_api_key, query_text):
     # Load document if file is uploaded
+    global openai_api_key
     if uploaded_file is not None:
         documents = [uploaded_file.read().decode()]
         # Split documents into chunks
@@ -54,7 +55,7 @@ with st.form('myform', clear_on_submit=True):
     global openai_api_key
     #openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
     submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
-    if submitted and openai_api_key.startswith('sk-'):
+    if submitted:
         with st.spinner('Calculating...'):
             response = generate_response(uploaded_file, openai_api_key, query_text)
             result.append(response)
