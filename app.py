@@ -40,14 +40,15 @@ def generate_response(uploaded_file, openai_api_key, query_text):
 st.set_page_config(page_title='🦜🔗 TextyTalk')
 st.title('🦜🔗 TextyTalk')
 
+openai_api_key = get_api_key()
 # File upload
-uploaded_file = st.file_uploader('Upload an article', type='txt')
+uploaded_file = st.file_uploader('Upload a document', type='txt')
 # Query text
 query_text = st.text_input('Enter your question:', placeholder = 'Please provide a short summary.', disabled=not uploaded_file)
 
 # Form input and query
 result = []
-openai_api_key = get_api_key()
+
 
 with st.form('myform', clear_on_submit=True):
     #openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
