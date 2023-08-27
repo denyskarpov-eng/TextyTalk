@@ -19,7 +19,7 @@ def get_api_key():
     # Return the API key
     return api_key
 
-def generate_response(uploaded_file, openai_api_key, query_text):
+def generate_response(uploaded_file, openai, query_text):
     # Load document if file is uploaded
     global openai
     if uploaded_file is not None:
@@ -52,7 +52,6 @@ result = []
 
 
 with st.form('myform', clear_on_submit=True):
-    global openai
     #openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
     submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
     if submitted:
