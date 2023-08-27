@@ -15,6 +15,7 @@ if 'OPENAI_API_KEY' in st.session_state:
 else:
     api_key = st.text_input('Enter your API key', type='password')
     st.session_state['OPENAI_API_KEY'] = api_key
+    print(api_key)
 
 
 
