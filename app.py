@@ -14,8 +14,10 @@ if 'OPENAI_API_KEY' not in st.session_state:
     api_key = st.text_input('Enter your API key', type='password')
     st.session_state['OPENAI_API_KEY'] = api_key
     key = st.session_state.get('OPENAI_API_KEY')
-    print(key)
-
+    if key:
+        print("YO")
+    else:
+        print("NO")
 
 
 def generate_response(uploaded_file, openai_api_key, query_text):
@@ -50,6 +52,7 @@ result = []
 with st.form('myform', clear_on_submit=True):
     #openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
     submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
+    key = st.session_state.get('OPENAI_API_KEY')
     if submitted:
         with st.spinner('Calculating...'):
             response = generate_response(uploaded_file, key, query_text)
