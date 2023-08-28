@@ -10,13 +10,19 @@ import os
 st.set_page_config(page_title='🦜🔗 TextyTalk')
 
 
-user_input = st.text_input('Enter your API key', type='password')
+if "api_key" not in st.session_state:
+    st.session_state["api_key"] = ""
+user_input = st.text_input('Enter your API key', type='password', key="api_key_input")
+if user_input:
+    st.session_state["api_key"] = user_input
+
+#user_input = st.text_input('Enter your API key', type='password')
 st.write("You entered:", user_input)
 
 if user_input:
-    print("YO Yes")
+    print("YO Ommm")
 else:
-    print("NO Wou")
+    print("NO Noooom")
 
 
 def generate_response(uploaded_file, openai_api_key, query_text):
