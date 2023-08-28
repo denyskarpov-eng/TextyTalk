@@ -33,7 +33,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
         # Create retriever interface
         retriever = db.as_retriever()
         # Create QA chain
-        qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key, chain_type='stuff', retriever=retriever))
+        qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key, chain_type='stuff'), retriever=retriever)
         return qa.run(query_text)
 
 
@@ -59,4 +59,4 @@ with st.form('myform', clear_on_submit=True):
 if len(result):
     st.info(response)
 
-print("USER INPUT", user_input)
+print("USER YOU", user_input)
