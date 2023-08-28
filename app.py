@@ -10,11 +10,13 @@ import os
 st.set_page_config(page_title='🦜🔗 TextyTalk')
 
 
-if "api_key" not in st.session_state:
-    st.session_state["api_key"] = ""
-user_input = st.text_input('Enter your API key', type='password', key="api_key_input")
-if user_input:
-    st.session_state["api_key"] = user_input
+if "api_key" in st.session_state:
+    user_input = st.session_state["api_key"]
+else:
+    user_input = st.text_input('Enter your API key', type='password', key="api_key_input")
+    if user_input:
+        st.session_state["api_key"] = user_input
+        print("There")
 
 #user_input = st.text_input('Enter your API key', type='password')
 st.write("You entered:", user_input)
