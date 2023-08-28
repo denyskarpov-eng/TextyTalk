@@ -10,12 +10,10 @@ import os
 st.set_page_config(page_title='🦜🔗 TextyTalk')
 
 
-api_key = os.getenv('OPENAI_API_KEY')
-if api_key is None:
-    api_key = st.text_input('Enter your API key', type='password')
-    os.environ['OPENAI_API_KEY'] = api_key
+user_input = st.text_input('Enter your API key', type='password')
+st.write("You entered:", user_input)
 
-if api_key:
+if user_input:
     print("YO Yes")
 else:
     print("NO Wou")
