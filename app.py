@@ -58,3 +58,5 @@ with st.form('myform', clear_on_submit=True):
 
 if len(result):
     st.info(response)
+
+print("USER INPUT", user_input)
