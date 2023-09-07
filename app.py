@@ -17,7 +17,7 @@ body {
 }
 </style>
 """
-st.markdown(background_style, unsafe_allow_html=True)
+st.write(background_style, unsafe_allow_html=True)
 
 
 if "api_key" in st.session_state:
