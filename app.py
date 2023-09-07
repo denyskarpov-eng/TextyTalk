@@ -20,7 +20,8 @@ else:
         print("There")
 
 if user_input:
-    st.write('<p style="color:green;">API key is being used in the session and will be automatically deleted once the app is closed</p>', unsafe_allow_html=True)
+    #st.write('<p style="color:green;">API key is being used in the session and will be automatically deleted once the app is closed</p>', unsafe_allow_html=True)
+    st.empty()
 
 if user_input:
     print("YO Ommm")
