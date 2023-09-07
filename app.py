@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit import HTML
+import HTML
 from langchain.llms import OpenAI
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
