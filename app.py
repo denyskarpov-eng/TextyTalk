@@ -9,15 +9,6 @@ import os
 # Page title
 st.set_page_config(page_title='🦜🔗 TextyTalk')
 
-# BACKGROUND
-background_style = """
-<style>
-body {
-    background-color: #f0f2f6;
-}
-</style>
-"""
-st.write(background_style, unsafe_allow_html=True)
 
 
 if "api_key" in st.session_state:
