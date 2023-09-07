@@ -10,7 +10,6 @@ import os
 st.set_page_config(page_title='🦜🔗 TextyTalk')
 
 
-
 if "api_key" in st.session_state:
     user_input = st.session_state["api_key"]
 else:
@@ -47,8 +46,6 @@ def generate_response(uploaded_file, openai_api_key, query_text):
         return qa.run(query_text)
 
 
-
-
 # File upload
 uploaded_file = st.file_uploader('Upload a document', type='txt')
 # Query text
@@ -57,16 +54,17 @@ query_text = st.text_input('Enter your question:', placeholder = 'Please provide
 # Form input and query
 result = []
 
+container = st.empty()
 
-#with st.form('myform', clear_on_submit=True):
-    #submitted = st.form_submit_button('Submit', disabled=not(uploaded_file and query_text))
-    #if submitted:
 if uploaded_file and query_text:
     with st.spinner('Calculating...'):
         response = generate_response(uploaded_file, user_input, query_text)
         result.append(response)
+        container.write(response)
 
 if len(result):
     st.info(response)
+
+
 
 print("USER YOU", user_input)
