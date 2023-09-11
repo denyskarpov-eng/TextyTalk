@@ -40,7 +40,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
 
             documents = ""
             for page in pdf_reader.pages:
-                text += page.exctract_text()
+                documents += page.exctract_text()
         else:
             documents = [uploaded_file.read().decode()]
         # Split documents into chunks
