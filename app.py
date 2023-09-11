@@ -35,7 +35,6 @@ def generate_response(uploaded_file, openai_api_key, query_text):
     if uploaded_file is not None:
         # Extract text from PDF file
         if uploaded_file.type == 'application/pdf':
-            st.write("Its PROCESSING")
             pdf_reader = PdfReader(uploaded_file)
 
             documents = ""
@@ -65,13 +64,12 @@ query_text = st.text_input('Enter your question:', placeholder = 'Please provide
 # Form input and query
 result = []
 
-container = st.empty()
 
 if uploaded_file and query_text:
     with st.spinner('Calculating...'):
         response = generate_response(uploaded_file, user_input, query_text)
         result.append(response)
-        container.write(response)
+        
 
 if len(result):
     st.info(response)
