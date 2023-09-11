@@ -5,6 +5,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma, LanceDB
 from langchain.chains import RetrievalQA
 import os
+import PyPDF2
 
 # Page title
 st.set_page_config(page_title='🦜🔗 TextyTalk')
