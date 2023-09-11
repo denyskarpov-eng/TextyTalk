@@ -47,7 +47,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
 
 
 # File upload
-uploaded_file = st.file_uploader('Upload a document', type='txt')
+uploaded_file = st.file_uploader('Upload a document', type=['txt', 'pdf', 'docx', 'html', 'htm', 'rtf', 'csv', 'xml', 'json'])
 # Query text
 query_text = st.text_input('Enter your question:', placeholder = 'Please provide a short summary.', disabled=not uploaded_file)
 
