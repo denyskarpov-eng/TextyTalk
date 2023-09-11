@@ -31,7 +31,12 @@ else:
 def generate_response(uploaded_file, openai_api_key, query_text):
     # Load document if file is uploaded
     if uploaded_file is not None:
-        documents = [uploaded_file.read().decode()]
+        # Extract text from PDF file
+        if uploaded_file.type == 'application/pdf':
+            pdf_reader = PyPDF2.PdfFileReader(uploaded_file)
+            documents = [pdf_reader.getPage(i).extractText() for i in range(pdf_reader.getNumPages())]
+        else:
+            documents = [uploaded_file.read().decode()]
         # Split documents into chunks
         text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
         texts = text_splitter.create_documents(documents)
