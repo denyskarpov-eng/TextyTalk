@@ -37,7 +37,8 @@ def generate_response(uploaded_file, openai_api_key, query_text):
         if uploaded_file.type == 'application/pdf':
             pdf_file = uploaded_file.read()
             doc = fitz.open(stream=pdf_file, filetype="pdf")
-            documents = [page.getText() for page in doc]
+            blocks = [page.getTextBlocks() for page in doc]
+            documents = ['\n'.join([''.join([line[4] for line in block]) for block in blocks]) for blocks in blocks]
         else:
             documents = [uploaded_file.read().decode()]
         # Split documents into chunks
