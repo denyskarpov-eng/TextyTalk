@@ -29,12 +29,13 @@ else:
     print("NO Noooom")
 
 
+
 def generate_response(uploaded_file, openai_api_key, query_text):
     # Load document if file is uploaded
     if uploaded_file is not None:
         # Extract text from PDF file
         if uploaded_file.type == 'application/pdf':
-            pdf_reader = PyPDF2.PdfFileReader(uploaded_file)
+            pdf_reader = PyPDF2.PdfReader(uploaded_file.read())
             documents = [pdf_reader.getPage(i).extractText() for i in range(pdf_reader.getNumPages())]
         else:
             documents = [uploaded_file.read().decode()]
@@ -53,7 +54,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
 
 
 # File upload
-uploaded_file = st.file_uploader('Upload a document', type=['txt', 'pdf', 'docx', 'html', 'htm', 'rtf', 'csv', 'xml', 'json'])
+uploaded_file = st.file_uploader('Upload a document', type=['txt', 'pdf', 'docx'])
 # Query text
 query_text = st.text_input('Enter your question:', placeholder = 'Please provide a short summary.', disabled=not uploaded_file)
 
