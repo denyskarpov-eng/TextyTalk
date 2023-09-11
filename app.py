@@ -5,7 +5,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma, LanceDB
 from langchain.chains import RetrievalQA
 import os
-import fitz
+from PyPDF2 import PdfReader
 
 # Page title
 st.set_page_config(page_title='🦜🔗 TextyTalk')
@@ -35,10 +35,12 @@ def generate_response(uploaded_file, openai_api_key, query_text):
     if uploaded_file is not None:
         # Extract text from PDF file
         if uploaded_file.type == 'application/pdf':
-            pdf_file = uploaded_file.read()
-            doc = fitz.open(stream=pdf_file, filetype="pdf")
-            blocks = [page.getTextBlocks() for page in doc]
-            documents = ['\n'.join([''.join([line[4] for line in block]) for block in blocks]) for blocks in blocks]
+            st.write("Its PROCESSING")
+            pdf_reader = PdfReader(uploaded_file)
+
+            documents = ""
+            for page in pdf_reader.pages:
+                text += page.exctract_text()
         else:
             documents = [uploaded_file.read().decode()]
         # Split documents into chunks
