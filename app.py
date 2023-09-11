@@ -35,7 +35,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
     if uploaded_file is not None:
         # Extract text from PDF file
         if uploaded_file.type == 'application/pdf':
-            pdf_reader = PyPDF2.PdfReader(uploaded_file.read())
+            pdf_reader = PyPDF2.PdfReader(uploaded_file)
             documents = [pdf_reader.getPage(i).extractText() for i in range(pdf_reader.getNumPages())]
         else:
             documents = [uploaded_file.read().decode()]
