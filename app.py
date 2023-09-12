@@ -42,8 +42,11 @@ def generate_response(uploaded_file, openai_api_key, query_text):
                 text += page.extract_text()
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
             chunks = text_splitter.split_text(text=text)
-            st.write(chunks)
-            st.write("Done processing chunks")
+            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+            db = Chroma.from_documents(chunks, embeddings)
+            retriever = db.as_retriever()
+            qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
+            return qa.run(query_text)
         else:
             documents = [uploaded_file.read().decode()]
             # Split documents into chunks
