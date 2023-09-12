@@ -45,7 +45,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
             qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
             return qa.run(query_text)
         elif uploaded_file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-            st.wrute(file_name)
+            st.write(file_name)
             doc = Document(uploaded_file)
             text = ""
             for para in doc.paragraphs:
