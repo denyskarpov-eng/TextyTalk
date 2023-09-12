@@ -1,6 +1,6 @@
 import streamlit as st
 from langchain.llms import OpenAI
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma, LanceDB
 from langchain.chains import RetrievalQA
@@ -43,7 +43,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
         else:
             documents = [uploaded_file.read().decode()]
         # Split documents into chunks
-        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         texts = text_splitter.create_documents(documents)
         # Select embeddings
         embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
