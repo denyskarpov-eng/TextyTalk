@@ -45,7 +45,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
             return qa.run(query_text)
         elif os.path.splitext(file_name)[1] == ".docx":
             st.write("File name:", file_name)
-            documents = [uploaded_file.read()]
+            documents = [uploaded_file.read().decode('utf-8')]
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
             texts = text_splitter.create_documents(documents)
             embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
