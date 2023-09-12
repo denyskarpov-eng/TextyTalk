@@ -17,22 +17,19 @@ else:
     user_input = st.text_input('Enter your API key', type='password', key="api_key_input")
     if user_input:
         st.session_state["api_key"] = user_input
-        print("There")
 
 if user_input:
     st.write('<p style="color:green;">API key is being used in the session and will be automatically deleted once the app is closed</p>', unsafe_allow_html=True)
     #st.empty()
 
-if user_input:
-    print("YO Ommm")
-else:
-    print("NO Noooom")
 
 
 
 def generate_response(uploaded_file, openai_api_key, query_text):
     # Load document if file is uploaded
     if uploaded_file is not None:
+        file_name = uploaded_file.name
+        st.write("File name:", file_name)
         # Extract text from PDF file
         if uploaded_file.type == 'application/pdf':
             pdf_reader = PdfReader(uploaded_file)
@@ -42,13 +39,13 @@ def generate_response(uploaded_file, openai_api_key, query_text):
                 text += page.extract_text()
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
             chunks = text_splitter.split_text(text=text)
-            st.write(chunks)
             embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
             db = Chroma.from_texts(chunks, embeddings)
             retriever = db.as_retriever()
             qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
             return qa.run(query_text)
         else:
+            # Extract text from TXT file
             documents = [uploaded_file.read().decode()]
             # Split documents into chunks
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
@@ -81,7 +78,3 @@ if uploaded_file and query_text:
 
 if len(result):
     st.info(response)
-
-
-
-print("USER YOU", user_input)
