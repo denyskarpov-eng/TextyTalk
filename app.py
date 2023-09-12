@@ -6,6 +6,7 @@ from langchain.vectorstores import Chroma, LanceDB
 from langchain.chains import RetrievalQA
 import os
 from PyPDF2 import PdfReader
+from docx import Document
 
 # Page title
 st.set_page_config(page_title='🦜🔗 TextyTalk')
@@ -45,16 +46,17 @@ def generate_response(uploaded_file, openai_api_key, query_text):
             return qa.run(query_text)
         elif os.path.splitext(file_name)[1] == ".docx":
             st.write("File name:", file_name)
-            file_contents = uploaded_file.read()
-            st.write("File contents:", file_contents)
-            # documents = [uploaded_file.read()]
-            # text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
-            # texts = text_splitter.create_documents(documents)
-            # embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-            # db = Chroma.from_documents(texts, embeddings)
-            # retriever = db.as_retriever()
-            # qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
-            # return qa.run(query_text)
+            doc = Document(uploaded_file)
+            text = ""
+            for para in doc.paragraphs:
+                text += para.text
+            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
+            chunks = text_splitter.split_text(text=text)
+            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+            db = Chroma.from_texts(chunks, embeddings)
+            retriever = db.as_retriever()
+            qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
+            return qa.run(query_text)
         else:
             # Extract text from TXT file
             documents = [uploaded_file.read().decode()]
