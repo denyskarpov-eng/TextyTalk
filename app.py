@@ -40,10 +40,11 @@ def generate_response(uploaded_file, openai_api_key, query_text):
             text = ""
             for page in pdf_reader.pages:
                 text += page.extract_text()
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
             chunks = text_splitter.split_text(text=text)
+            st.write(chunks)
             embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-            db = Chroma.from_documents(chunks, embeddings)
+            db = Chroma.from_texts(chunks, embeddings)
             retriever = db.as_retriever()
             qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
             return qa.run(query_text)
