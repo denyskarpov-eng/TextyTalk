@@ -46,8 +46,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
         elif os.path.splitext(file_name)[1] == ".docx":
             st.write("File name:", file_name)
             file_contents = uploaded_file.read()
-            decoded_string = file_contents.decode('latin-1')
-            st.write("File contents:", decoded_string)
+            st.write("File contents:", file_contents)
             # documents = [uploaded_file.read()]
             # text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
             # texts = text_splitter.create_documents(documents)
