@@ -44,13 +44,13 @@ def generate_response(uploaded_file, openai_api_key, query_text):
             retriever = db.as_retriever()
             qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
             return qa.run(query_text)
-        elif os.path.splitext(file_name)[1] == ".docx":
-            st.write("File name:", file_name)
+        elif uploaded_file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            st.wrute(file_name)
             doc = Document(uploaded_file)
             text = ""
             for para in doc.paragraphs:
                 text += para.text
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
+            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
             chunks = text_splitter.split_text(text=text)
             embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
             db = Chroma.from_texts(chunks, embeddings)
