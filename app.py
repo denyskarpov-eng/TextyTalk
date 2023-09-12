@@ -29,7 +29,6 @@ def generate_response(uploaded_file, openai_api_key, query_text):
     # Load document if file is uploaded
     if uploaded_file is not None:
         file_name = uploaded_file.name
-        st.write("File name:", file_name)
         # Extract text from PDF file
         if uploaded_file.type == 'application/pdf':
             pdf_reader = PdfReader(uploaded_file)
@@ -44,6 +43,8 @@ def generate_response(uploaded_file, openai_api_key, query_text):
             retriever = db.as_retriever()
             qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
             return qa.run(query_text)
+        elif os.path.splitext(file_name)[1] == ".docx":
+            st.write("File name:", file_name)
         else:
             # Extract text from TXT file
             documents = [uploaded_file.read().decode()]
