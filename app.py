@@ -45,14 +45,17 @@ def generate_response(uploaded_file, openai_api_key, query_text):
             return qa.run(query_text)
         elif os.path.splitext(file_name)[1] == ".docx":
             st.write("File name:", file_name)
-            documents = [uploaded_file.read().decode('utf-8')]
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
-            texts = text_splitter.create_documents(documents)
-            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-            db = Chroma.from_documents(texts, embeddings)
-            retriever = db.as_retriever()
-            qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
-            return qa.run(query_text)
+            file_contents = uploaded_file.read()
+            decoded_string = file_contents.decode('latin-1')
+            st.write("File contents:", decoded_string)
+            # documents = [uploaded_file.read()]
+            # text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
+            # texts = text_splitter.create_documents(documents)
+            # embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+            # db = Chroma.from_documents(texts, embeddings)
+            # retriever = db.as_retriever()
+            # qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
+            # return qa.run(query_text)
         else:
             # Extract text from TXT file
             documents = [uploaded_file.read().decode()]
