@@ -39,7 +39,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
 
             text = ""
             for page in pdf_reader.pages:
-                text += page.extract_text
+                text += page.extract_text()
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
             chunks = text_splitter.split_text(text=text)
             st.write(chunks)
