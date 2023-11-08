@@ -1,6 +1,6 @@
 streamlit
 langchain
-openai=0.28.1
+openai==0.28.1
 PyPDF2
 python-docx
 chromadb
