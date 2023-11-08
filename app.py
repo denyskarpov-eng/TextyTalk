@@ -1,13 +1,13 @@
 import streamlit as st
-from langchain.llms import OpenAI
-from langchain.document_loaders import Docx2txtLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma, LanceDB
-from langchain.chains import RetrievalQA
-import os
 from PyPDF2 import PdfReader
 from docx import Document
+from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
+from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.llms import OpenAI
+from langchain.chains import RetrievalQA
+import os
+
 
 # Page title
 st.set_page_config(page_title='🦜🔗 TextyTalk')
@@ -24,6 +24,7 @@ else:
 
 
 def generate_embeddings(openai_api_key, uploaded_file):
+    global current_db
     # Load document if file is uploaded
     if uploaded_file is not None and current_db is None:
         file_name = uploaded_file.name
@@ -36,8 +37,8 @@ def generate_embeddings(openai_api_key, uploaded_file):
                 text += page.extract_text()
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
             chunks = text_splitter.split_text(text=text)
-            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-            db = Chroma.from_texts(chunks, embeddings)
+            # embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+            # db = Chroma.from_texts(chunks, embeddings)
         elif uploaded_file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
             st.write(file_name)
             doc = Document(uploaded_file)
@@ -47,8 +48,8 @@ def generate_embeddings(openai_api_key, uploaded_file):
                 print(para)
             text_splitter = CharacterTextSplitter(separator = "\n\n", chunk_size = 1000, chunk_overlap  = 200, length_function = len, is_separator_regex = False,)
             chunks = text_splitter.split_text(text=text)
-            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-            db = Chroma.from_texts(chunks, embeddings)
+            # embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+            # db = Chroma.from_texts(chunks, embeddings)
         else:
             # Extract text from TXT file
             documents = [uploaded_file.read().decode()]
@@ -59,6 +60,11 @@ def generate_embeddings(openai_api_key, uploaded_file):
             embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
             # Create a vectorstore from documents
             db = Chroma.from_documents(texts, embeddings)
+            
+        embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+        db = Chroma.from_documents(chunks, embedding_function)
+        current_db = db
+        
         return db
  
 
