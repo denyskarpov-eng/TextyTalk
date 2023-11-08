@@ -2,6 +2,7 @@ import streamlit as st
 from PyPDF2 import PdfReader
 from docx import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
+from langchain.vectorstores.document import Document as LC_Document
 from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.llms import OpenAI
@@ -60,9 +61,9 @@ def generate_embeddings(openai_api_key, uploaded_file):
             embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
             # Create a vectorstore from documents
             db = Chroma.from_documents(texts, embeddings)
-            
+        documents = [LC_Document(page_content=chunk) for chunk in chunks]
         embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-        db = Chroma.from_documents(chunks, embedding_function)
+        db = Chroma.from_documents(documents, embedding_function)
         current_db = db
         
         return db
