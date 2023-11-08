@@ -26,47 +26,41 @@ else:
 
 def generate_embeddings(openai_api_key, uploaded_file):
     global current_db
+
     # Load document if file is uploaded
     if uploaded_file is not None and current_db is None:
         file_name = uploaded_file.name
+
         # Extract text from PDF file
         if uploaded_file.type == 'application/pdf':
             pdf_reader = PdfReader(uploaded_file)
-
             text = ""
             for page in pdf_reader.pages:
                 text += page.extract_text()
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
-            chunks = text_splitter.split_text(text=text)
-            # embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-            # db = Chroma.from_texts(chunks, embeddings)
+
+        # Extract text from Word document
         elif uploaded_file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-            st.write(file_name)
             doc = Document(uploaded_file)
             text = ""
             for para in doc.paragraphs:
                 text += para.text
-                print(para)
-            text_splitter = CharacterTextSplitter(separator = "\n\n", chunk_size = 1000, chunk_overlap  = 200, length_function = len, is_separator_regex = False,)
-            chunks = text_splitter.split_text(text=text)
-            # embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-            # db = Chroma.from_texts(chunks, embeddings)
+
+        # Extract text from TXT file
         else:
-            # Extract text from TXT file
-            documents = [uploaded_file.read().decode()]
-            # Split documents into chunks
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-            texts = text_splitter.create_documents(documents)
-            # Select embeddings
-            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-            # Create a vectorstore from documents
-            db = Chroma.from_documents(texts, embeddings)
-        documents = [LC_Document(page_content=chunk) for chunk in chunks]
-        embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-        db = Chroma.from_documents(documents, embedding_function)
+            text = uploaded_file.read().decode()
+
+        # Split text into chunks
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        chunks = text_splitter.split_text(text=text)
+
+        # Select embeddings
+        embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+
+        # Create a vectorstore from chunks
+        db = Chroma.from_documents(chunks, embeddings)
         current_db = db
-        
-        return db
+
+    return db
  
 
 def generate_response(openai_api_key, query_text):
