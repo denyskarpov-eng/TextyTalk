@@ -38,8 +38,8 @@ def generate_embeddings(openai_api_key, uploaded_file):
                 text += page.extract_text()
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
             chunks = text_splitter.split_text(text=text)
-            # embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-            # db = Chroma.from_texts(chunks, embeddings)
+            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+            db = Chroma.from_texts(chunks, embeddings)
         elif uploaded_file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
             st.write(file_name)
             doc = Document(uploaded_file)
