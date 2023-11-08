@@ -44,7 +44,7 @@ def generate_embeddings(openai_api_key, uploaded_file):
                 text += page.extract_text()
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
             chunks = text_splitter.split_text(text=text)
-            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+            embeddings = OpenAIEmbeddings(api_key=openai_api_key)
             db = Chroma.from_texts(chunks, embeddings)
     
         elif uploaded_file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
@@ -55,7 +55,7 @@ def generate_embeddings(openai_api_key, uploaded_file):
                 text += para.text
             text_splitter = CharacterTextSplitter(separator = "\n\n", chunk_size = 1000, chunk_overlap  = 200, length_function = len, is_separator_regex = False,)
             chunks = text_splitter.split_text(text=text)
-            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+            embeddings = OpenAIEmbeddings(api_key=openai_api_key)
             db = Chroma.from_texts(chunks, embeddings)
             
         else:
@@ -65,7 +65,7 @@ def generate_embeddings(openai_api_key, uploaded_file):
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
             texts = text_splitter.create_documents(documents)
             # Select embeddings
-            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+            embeddings = OpenAIEmbeddings(api_key=openai_api_key)
             # Create a vectorstore from documents
             db = Chroma.from_documents(texts, embeddings)
             
