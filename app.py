@@ -5,6 +5,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTex
 from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.llms import OpenAI
+from langchain.embeddings.openai import OpenAIEmbeddings
+
 from langchain.chains import RetrievalQA
 import os
 
