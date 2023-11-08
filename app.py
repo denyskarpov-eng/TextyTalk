@@ -13,22 +13,27 @@ st.set_page_config(page_title='🦜🔗 TextyTalk')
 
 
 if "api_key" in st.session_state:
-    user_input = st.session_state["api_key"]
+    openai_api_key = st.session_state["api_key"]
 else:
-    user_input = st.text_input('Enter your API key', type='password', key="api_key_input")
-    if user_input:
-        st.session_state["api_key"] = user_input
+    openai_api_key = st.text_input('Enter your API key', type='password', key="api_key_input")
+    if openai_api_key:
+        st.session_state["api_key"] = openai_api_key
+        
 
-if user_input:
+if openai_api_key:
     st.write('<p style="color:green;">API key is being used in the session and will be automatically deleted once the app is closed</p>', unsafe_allow_html=True)
     #st.empty()
+    
 
 
 
+current_db = None
 
-def generate_response(uploaded_file, openai_api_key, query_text):
+
+def generate_embeddings(openai_api_key, uploaded_file):
+    global current_db
     # Load document if file is uploaded
-    if uploaded_file is not None:
+    if uploaded_file is not None and current_db is None:
         file_name = uploaded_file.name
         # Extract text from PDF file
         if uploaded_file.type == 'application/pdf':
@@ -41,9 +46,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
             chunks = text_splitter.split_text(text=text)
             embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
             db = Chroma.from_texts(chunks, embeddings)
-            retriever = db.as_retriever()
-            qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
-            return qa.run(query_text)
+    
         elif uploaded_file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
             st.write(file_name)
             doc = Document(uploaded_file)
@@ -54,9 +57,7 @@ def generate_response(uploaded_file, openai_api_key, query_text):
             chunks = text_splitter.split_text(text=text)
             embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
             db = Chroma.from_texts(chunks, embeddings)
-            retriever = db.as_retriever()
-            qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
-            return qa.run(query_text)
+            
         else:
             # Extract text from TXT file
             documents = [uploaded_file.read().decode()]
@@ -67,12 +68,22 @@ def generate_response(uploaded_file, openai_api_key, query_text):
             embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
             # Create a vectorstore from documents
             db = Chroma.from_documents(texts, embeddings)
-            # Create retriever interface
-            retriever = db.as_retriever()
-            # Create QA chain
-            qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
-            return qa.run(query_text)
+            
+        current_db = db 
+        return db
 
+
+def generate_response(openai_api_key, query_text):
+    global current_db
+    if current_db is not None:
+        retriever = current_db.as_retriever(search_kwargs={"k": 5})
+        # Create QA chain
+        qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
+        return qa.run(query_text)
+    else:
+        return "No document uploaded yet."
+            
+            
 
 # File upload
 uploaded_file = st.file_uploader('Upload a document', type=['txt', 'pdf', 'docx'])
@@ -81,6 +92,11 @@ query_text = st.text_input('Enter your question:', placeholder = 'Please provide
 
 # Form input and query
 result = []
+
+
+if  openai_api_key is not None and current_db is None and uploaded_file is not None:
+    st.write("Generating embeddings")
+    current_db = generate_embeddings(openai_api_key, uploaded_file)
 
 
 if uploaded_file and query_text:
