@@ -1,8 +1,5 @@
-python-docx
-PyPDF2
-streamlit
 langchain
 openai
+PyPDF2
+python-docx
 chromadb
-lancedb
-tiktoken
