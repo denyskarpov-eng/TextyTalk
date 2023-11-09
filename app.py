@@ -35,7 +35,8 @@ def generate_embeddings(openai_api_key, uploaded_file):
         file_name = uploaded_file.name
         # Extract text from PDF file
         if uploaded_file.type == 'application/pdf':
-            loader = PyPDFLoader(uploaded_file)
+            file_path = os.path.join(uploaded_file.get_temporary_directory(), uploaded_file.name)
+            loader = PyPDFLoader(file_path)
 
             pages = loader.load()
             splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=20)
