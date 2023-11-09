@@ -53,16 +53,16 @@ def generate_embeddings(openai_api_key, uploaded_file):
             chunks = text_splitter.split_text(text=text)
             # embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
             # db = Chroma.from_texts(chunks, embeddings)
-        else:
-            # Extract text from TXT file
-            documents = [uploaded_file.read().decode()]
-            # Split documents into chunks
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-            texts = text_splitter.create_documents(documents)
-            embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-            db = Chroma.from_documents(documents, embedding_function)
-            # Create a vectorstore from documents
-            db = Chroma.from_documents(texts, embeddings)
+        # else:
+            # # Extract text from TXT file
+            # documents = [uploaded_file.read().decode()]
+            # # Split documents into chunks
+            # text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+            # texts = text_splitter.create_documents(documents)
+            # embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+            # db = Chroma.from_documents(documents, embedding_function)
+            # # Create a vectorstore from documents
+            # db = Chroma.from_documents(texts, embeddings)
         # embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
         # db = Chroma.from_documents(documents, embedding_function)
         current_db = db
