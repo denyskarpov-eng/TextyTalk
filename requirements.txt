@@ -3,5 +3,6 @@ langchain
 sentence-transformers
 openai
 PyPDF2
+pypdf
 python-docx
 chromadb
