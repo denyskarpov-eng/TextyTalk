@@ -29,6 +29,7 @@ else:
 
 
 import io
+import tempfile
 
 def generate_embeddings(openai_api_key, uploaded_file):
     global current_db
@@ -37,10 +38,14 @@ def generate_embeddings(openai_api_key, uploaded_file):
         file_name = uploaded_file.name
         # Extract text from PDF file
         if uploaded_file.type == 'application/pdf':
-            file_bytes = uploaded_file.read()
+
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(uploaded_file.read())
+                temp_file_path = temp_file.name
+                
         
             
-            loader = PyPDFLoader(file_bytes)
+            loader = PyPDFLoader(temp_file_path)
 
             pages = loader.load()
             splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=20)
