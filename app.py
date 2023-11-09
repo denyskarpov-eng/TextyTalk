@@ -83,7 +83,7 @@ def generate_embeddings(openai_api_key, uploaded_file):
 def generate_response(openai_api_key, query_text):
     global current_db
     if current_db is not None:
-        similar_docs = db.similarity_search(query_text, k = 3)
+        similar_docs = current_db.similarity_search(query_text, k = 3)
         #retriever = current_db.as_retriever(search_kwargs={"k": 5})
         # Create QA chain
         qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=similar_docs)
