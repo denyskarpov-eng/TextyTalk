@@ -1,5 +1,5 @@
 import streamlit as st
-from PyPDF2 import PdfReader
+#from PyPDF2 import PdfReader
 from docx import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
 from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
@@ -10,6 +10,9 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.chains import RetrievalQA
 import os
 
+from langchain.document_loaders import PyPDFLoader
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain import HuggingFaceHub
 
 # Page title
 st.set_page_config(page_title='🦜🔗 TextyTalk')
@@ -32,15 +35,13 @@ def generate_embeddings(openai_api_key, uploaded_file):
         file_name = uploaded_file.name
         # Extract text from PDF file
         if uploaded_file.type == 'application/pdf':
-            pdf_reader = PdfReader(uploaded_file)
+            loader = PyPDFLoader(uploaded_file)
 
-            text = ""
-            for page in pdf_reader.pages:
-                text += page.extract_text()
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function=len)
-            chunks = text_splitter.split_text(text=text)
-            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-            db = Chroma.from_texts(chunks, embeddings)
+            pages = loader.load()
+            splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=20)
+            docs = splitter.split_documents(pages)
+            embeddings = HuggingFaceEmbeddings()
+            db = Chroma.from_documents(docs, embeddings)
         elif uploaded_file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
             st.write(file_name)
             doc = Document(uploaded_file)
@@ -72,9 +73,10 @@ def generate_embeddings(openai_api_key, uploaded_file):
 def generate_response(openai_api_key, query_text):
     global current_db
     if current_db is not None:
-        retriever = current_db.as_retriever(search_kwargs={"k": 5})
+        similar_docs = db.similarity_search(query_text, k = 3)
+        #retriever = current_db.as_retriever(search_kwargs={"k": 5})
         # Create QA chain
-        qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=retriever)
+        qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type='stuff', retriever=similar_docs)
         return qa.run(query_text)
     else:
         return "No document uploaded yet."
