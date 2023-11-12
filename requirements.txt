@@ -1,8 +1,8 @@
-streamlit
 langchain
-sentence-transformers
-openai
+openai==0.28
+tiktoken
 PyPDF2
 pypdf
+docx2txt
 python-docx
 chromadb
