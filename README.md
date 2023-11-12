@@ -1,6 +1,3 @@
-Try live demo of TextyTalk https://huggingface.co/spaces/Jeremymeme/TextyTalk
-
-
 ---
 title: TextyTalk
 emoji: 🏆
