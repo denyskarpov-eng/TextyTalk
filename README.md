@@ -1,4 +1,4 @@
-# TextyTalk
+# [TextyTalk](https://huggingface.co/spaces/Jeremymeme/TextyTalk)
 
 TextyTalk is an intelligent question-answering tool integrated with the OpenAI API and hosted on Hugging Face's Spaces platform. This application simplifies the process of querying information from various document formats like PDF, Microsoft Word, or plain text files.
 
